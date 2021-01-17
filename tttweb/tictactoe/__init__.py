@@ -1,13 +1,21 @@
 #! /usr/bin/env python
 from builtins import range
 
+import json
 import sys
+
+from django.http.request import bytes_to_text
 
 
 class TicTacToe(object):
-    def __init__(self):
-        self.board = [str(i) for i in range(1, 10)]
-        self.player = 0
+    def __init__(self, board=[str(i) for i in range(1, 10)], player=0):
+        self.board = board
+        self.player = player
+
+    @classmethod
+    def from_game(cls, game):
+        board = json.loads(game.board_text)
+        return cls(board=board, player=game.player)
 
     def play(self):
         while not self._is_ended():
